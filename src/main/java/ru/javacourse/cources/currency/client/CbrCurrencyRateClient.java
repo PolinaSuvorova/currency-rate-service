@@ -1,7 +1,9 @@
 package ru.javacourse.cources.currency.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.javacourse.cources.currency.config.CurrencyClientCfg;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,14 +15,15 @@ import java.time.format.DateTimeFormatter;
 
 //Компонент для получения списка курсов валют на дату
 @Component
+@RequiredArgsConstructor
 public class CbrCurrencyRateClient implements HttpCurrencyDateRateClient {
     private static final String DATE_PATTERN = "dd/MM/yyyy";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
-
+    private final CurrencyClientCfg clientCfg;
     @Override
     public String requestByDate(LocalDate date) {
         // Формируем URL
-        String baseurl = "http://www.cbr.ru/scripts/XML_daily.asp";
+        String baseurl = clientCfg.getUrl();
         String url = buildUrlRequest(baseurl, date);
         // Формируем сервис
         HttpRequest request = HttpRequest.newBuilder()
